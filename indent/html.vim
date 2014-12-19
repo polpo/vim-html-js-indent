@@ -2,8 +2,8 @@
 " Header: "{{{
 " Maintainer:	Bram Moolenaar
 " Original Author: Andy Wokula <anwoku@yahoo.de>
-" Last Change:	2014 Aug 23
-" Version:	1.0
+" Last Change:	2014 Dec 19
+" Version:	1.1
 " Description:	HTML indent script with cached state for faster indenting on a
 "		range of lines.
 "		Supports template systems through hooks.
@@ -14,6 +14,7 @@
 "	indent/css.vim (2006 Dec 20) from N. Weibull
 "
 " History:
+" 2014 Dec      (v1.1) readded vim-javascript Indention (thx to Hsiaoming Yang)
 " 2014 June	(v1.0) overhaul (Bram)
 " 2012 Oct 21	(v0.9) added support for shiftwidth()
 " 2011 Sep 09	(v0.8) added HTML5 tags (thx to J. Zuckerman)
@@ -25,6 +26,10 @@
 if exists("b:did_indent") "{{{
   finish
 endif
+
+" Initial indent/javascript before set did_indent = 1
+ru! indent/javascript.vim
+
 let b:did_indent = 1
 
 setlocal indentexpr=HtmlIndent()
@@ -547,7 +552,7 @@ func! s:Alien3()
     return eval(b:hi_js1indent)
   endif
   if b:hi_indent.scripttype == "javascript"
-    return cindent(v:lnum)
+    return GetJavascriptIndent()
   else
     return -1
   endif
